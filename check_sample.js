@@ -13,9 +13,9 @@ const state = run(spec.ops);
 const done = finish(state, spec.commit_ids || []);
 const view = render(spec);
 
-emit("提交后的内容 =", JSON.stringify(state.rows));
+emit("提交后的内容 =", state.rows);
 emit("保存点层级 =", state.depth);
-emit("保存点列表 =", JSON.stringify(state.savepoints));
+emit("保存点列表 =", state.savepoints);
 emit("是否提交成功 =", done.committed);
 emit("回滚次数 =", done.rolled_back);
 emit("保留的写入数 =", done.writes_kept);
