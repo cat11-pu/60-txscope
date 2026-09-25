@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>txscope</title>
+<style>body{font-family:system-ui,sans-serif;margin:24px;max-width:960px}
+textarea{width:100%;height:150px;font-family:ui-monospace,monospace}
+button{padding:6px 12px;margin:8px 8px 8px 0}pre{background:#f6f6f6;padding:10px;border-radius:6px;overflow:auto}
+.ok{color:#0a7}.bad{color:#c00}</style>
+</head>
+<body>
+<h1>txscope 工作台</h1>
+<p>改样例里的操作序列与保存点再点运行，结果给提交内容、回滚次数与保存点层级。</p>
+<textarea id="input">{
+  "no_savepoint_code": "E_NO_SAVEPOINT",
+  "commit_ids": ["c0", "c0"],
+  "ops": [
+    {"op": "begin"},
+    {"op": "write", "key": "a", "value": 1},
+    {"op": "savepoint", "name": "sp0"},
+    {"op": "write", "key": "b", "value": 2},
+    {"op": "savepoint", "name": "sp1"},
+    {"op": "write", "key": "c", "value": 3},
+    {"op": "rollback", "savepoint": "sp1"},
+    {"op": "write", "key": "d", "value": 4},
+    {"op": "commit"}
+  ],
+  "scope_depth": 1
+}</textarea>
+<div><button id="run">运行</button><span id="status" class="ok">等待</span></div>
+<pre id="out">还没跑</pre>
+<script type="module">
+import { render } from "./app.js";
+
+document.getElementById("run").addEventListener("click", function () {
+  const status = document.getElementById("status");
+  try {
+    const spec = JSON.parse(document.getElementById("input").value);
+    const result = render(spec);
+    status.className = "ok";
+    status.textContent = "完成";
+    document.getElementById("out").textContent = JSON.stringify(result, null, 1);
+  } catch (error) {
+    status.className = "bad";
+    status.textContent = "出错 " + error.message;
+    document.getElementById("out").textContent = String(error && error.stack ? error.stack : error);
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "no_savepoint_code": "E_NO_SAVEPOINT",
+  "commit_ids": ["c0", "c0"],
+  "ops": [
+    {"op": "begin"},
+    {"op": "write", "key": "a", "value": 1},
+    {"op": "savepoint", "name": "sp0"},
+    {"op": "write", "key": "b", "value": 2},
+    {"op": "savepoint", "name": "sp1"},
+    {"op": "write", "key": "c", "value": 3},
+    {"op": "rollback", "savepoint": "sp1"},
+    {"op": "write", "key": "d", "value": 4},
+    {"op": "commit"}
+  ],
+  "scope_depth": 1
+}
